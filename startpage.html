@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Start</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #000;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+    }
+
+    h1 {
+      font-size: 32px;
+      letter-spacing: 4px;
+      border: 1px solid #fff;
+      padding: 10px 20px;
+    }
+
+    .search-box {
+      border: 1px solid #fff;
+      padding: 8px 12px;
+      width: 400px;
+      background: #000;
+      color: #fff;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .links {
+      display: grid;
+      grid-template-columns: repeat(4, 80px);
+      gap: 20px;
+    }
+
+    .link {
+      border: 1px solid #fff;
+      padding: 10px;
+      text-align: center;
+      text-decoration: none;
+      color: #fff;
+      transition: background 0.2s;
+    }
+
+    .link:hover {
+      background: #111;
+    }
+
+    .clock {
+      font-size: 18px;
+      letter-spacing: 2px;
+    }
+  </style>
+</head>
+<body>
+  <h1>ZEN</h1>
+  <form action="https://duckduckgo.com/" method="get">
+    <input type="text" name="q" class="search-box" placeholder="Search...">
+  </form>
+
+  <div class="links">
+    <a href="https://github.com" class="link">GitHub</a>
+    <a href="https://youtube.com" class="link">YouTube</a>
+    <a href="https://mail.google.com" class="link">Mail</a>
+    <a href="https://reddit.com" class="link">Reddit</a>
+  </div>
+
+  <div class="clock" id="clock"></div>
+
+  <script>
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('clock').textContent = `${h}:${m}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+</body>
+</html>
