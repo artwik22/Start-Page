@@ -1,207 +1,161 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8">
-
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Zen Start Page</title>
-
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-
   <style>
+    /* Keep the original black & white terminal look, but improve responsiveness, accessibility and small bugs */
+    :root{
+      --bg: #000000;
+      --fg: #ffffff;
+      --panel: #050505;
+      --muted: #bfbfbf;
+    }
+
+    *,*::before,*::after{box-sizing:border-box}
 
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
 
-
-
+    html,body{height:100%}
     body {
-
       margin: 0;
-
-      height: 100vh;
-
-      background: #000;
-
-      color: #fff;
-
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--fg);
       font-family: 'JetBrains Mono', monospace;
-
       display: flex;
-
       flex-direction: column;
-
       align-items: center;
-
       justify-content: center;
-
       gap: 40px;
-
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding: 24px; /* small padding for tiny viewports */
     }
 
-
-
+    /* ASCII logo */
     .ascii {
-
       font-family: 'JetBrains Mono', monospace;
-
       font-size: 14px;
-
       line-height: 1.2;
-
       white-space: pre;
-
-      color: #fff;
-
-      border: 0px solid #fff;
-
+      color: var(--fg);
+      border: 0px solid var(--fg);
       padding: 20px 30px;
-
       text-align: center;
-
+      max-width: 100%;
+      overflow: auto; /* prevents clipping on very narrow viewports */
     }
 
-
-
+    /* Search box (keeps original appearance) */
+    .search-form{width:100%;display:flex;justify-content:center}
     .search-box {
-
-      border: 1px solid #fff;
-
+      border: 1px solid var(--fg);
       padding: 8px 12px;
-
       width: 400px;
-
-      background: #000;
-
-      color: #fff;
-
+      max-width: 100%;
+      background: var(--bg);
+      color: var(--fg);
       font-size: 16px;
-
       outline: none;
-
+      caret-color: var(--fg);
     }
+    .search-box::placeholder{color:var(--muted)}
 
-
-
+    /* Links grid: preserve 4 columns on wide screens but adapt on smaller screens */
     .links {
-
       display: grid;
-
-      grid-template-columns: repeat(4, 80px);
-
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
       gap: 20px;
-
+      width: 100%;
+      max-width: 400px; /* keeps overall width visually similar to original */
     }
-
-
 
     .link {
-
-      border: 1px solid #fff;
-
-
-      padding: 10px;
-
-
+      border: 1px solid var(--fg);
       padding: 12px;
-
       text-align: center;
-
       text-decoration: none;
-
-      color: #fff;
-
-      transition: background 0.2s;
-
+      color: var(--fg);
+      transition: background 0.2s, transform 0.15s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px; /* touch-friendly */
     }
 
-
-
-    .link:hover {
-
-      background: #111;
-
+    .link:hover, .link:focus{
+      background: #111; /* subtle hover like original */
+      transform: translateY(-1px);
     }
 
-
+    .link:focus{outline:2px solid rgba(255,255,255,0.08);outline-offset:2px}
 
     .clock {
-
       font-size: 18px;
-
       letter-spacing: 2px;
+      min-width: 64px;
+      text-align: center;
+    }
 
+    /* Respect user reduced motion preference */
+    @media (prefers-reduced-motion: reduce){
+      .link{transition:none}
     }
 
   </style>
-
 </head>
-
 <body>
-
-  <pre class="ascii">
-
+  <pre class="ascii" aria-hidden="true">
   _____            ____                                  
-
  |__  /___ _ __   | __ ) _ __ _____      _____  ___ _ __ 
-
    / // _ \ '_ \  |  _ \| '__/ _ \ \ /\ / / __|/ _ \ '__|
-
   / /|  __/ | | | | |_) | | | (_) \ V  V /\__ \  __/ |   
-
  /____\___|_| |_| |____/|_|  \___/ \_/\_/ |___/\___|_|   
-
   </pre>
 
-
-
-  <form action="https://duckduckgo.com/" method="get">
-
-    <input type="text" name="q" class="search-box" placeholder="Search...">
-
+  <form class="search-form" action="https://duckduckgo.com/" method="get" role="search" aria-label="Search">
+    <input type="text" name="q" class="search-box" placeholder="Search..." aria-label="Search input">
   </form>
 
-
-
-  <div class="links">
-
+  <div class="links" role="navigation" aria-label="Quick links">
     <a href="https://github.com" class="link">GitHub</a>
-
-    <a href="https://chatgpt.com" class="link">ChatGPT </a>
-
+    <a href="https://chatgpt.com" class="link">ChatGPT</a>
     <a href="https://mail.proton.me/u/2/inbox" class="link">Mail</a>
-
     <a href="https://reddit.com" class="link">Reddit</a>
-
   </div>
 
-
-
-  <div class="clock" id="clock"></div>
-
-
+  <div class="clock" id="clock" aria-live="polite"></div>
 
   <script>
-
+    // Keep original clock format (HH:MM) but update each second to ensure minutes roll exactly on time
     function updateClock() {
-
       const now = new Date();
-
       const h = String(now.getHours()).padStart(2, '0');
-
       const m = String(now.getMinutes()).padStart(2, '0');
-
       document.getElementById('clock').textContent = `${h}:${m}`;
-
     }
 
+    // Run immediately and then every second. This mirrors original behaviour while keeping time precise.
+    updateClock();
     setInterval(updateClock, 1000);
 
-    updateClock();
-
+    // small UX: pressing '/' focuses the search box (common on startpages)
+    (function(){
+      const input = document.querySelector('.search-box');
+      document.addEventListener('keydown', (e) => {
+        if (e.key === '/'){
+          // ignore when typing in an input or editable element
+          const active = document.activeElement;
+          if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) return;
+          e.preventDefault();
+          input.focus();
+          input.select();
+        }
+      });
+    })();
   </script>
-
 </body>
-
 </html>
