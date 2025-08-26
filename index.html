@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Zen Start Page</title>
+  <title>Start</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
@@ -18,48 +18,46 @@
       align-items: center;
       justify-content: center;
       gap: 40px;
-      text-align: center;
     }
 
     .ascii {
+      font-family: 'JetBrains Mono', monospace;
       font-size: 14px;
       line-height: 1.2;
       white-space: pre;
+      color: #fff;
+      border: 0px solid #fff;
       padding: 20px 30px;
+      text-align: center;
     }
 
     .search-box {
       border: 1px solid #fff;
       padding: 8px 12px;
-      width: 100%;
-      max-width: 400px;
+      width: 400px;
       background: #000;
       color: #fff;
       font-size: 16px;
       outline: none;
-      border-radius: 6px;
     }
 
     .links {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      grid-template-columns: repeat(4, 80px);
       gap: 20px;
-      width: 100%;
-      max-width: 400px;
     }
 
     .link {
       border: 1px solid #fff;
-      padding: 12px;
+      padding: 10px;
+      text-align: center;
       text-decoration: none;
       color: #fff;
-      transition: background 0.2s, transform 0.2s;
-      border-radius: 6px;
+      transition: background 0.2s;
     }
 
     .link:hover {
       background: #111;
-      transform: translateY(-2px);
     }
 
     .clock {
@@ -70,12 +68,11 @@
 </head>
 <body>
   <pre class="ascii">
- _____ ____  
-|__ /___ _ __ 
-  | __ ) _ __ _____ _____ ___ _ __ 
-  | _ \| '__/ _ \ \ /\ / / __|/ _ \ '__|
-  | |_) | | | (_) \ V V /\__ \ __/ |   
-  |____/|_|  \___/ \_/\_/ |___/\___|_|  
+  _____            ____                                  
+ |__  /___ _ __   | __ ) _ __ _____      _____  ___ _ __ 
+   / // _ \ '_ \  |  _ \| '__/ _ \ \ /\ / / __|/ _ \ '__|
+  / /|  __/ | | | | |_) | | | (_) \ V  V /\__ \  __/ |   
+ /____\___|_| |_| |____/|_|  \___/ \_/\_/ |___/\___|_|   
   </pre>
 
   <form action="https://duckduckgo.com/" method="get">
