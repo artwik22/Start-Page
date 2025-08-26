@@ -1,73 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Zen Start Page</title>
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
-
-    body {
-      margin: 0;
-      height: 100vh;
-      background: #000;
-      color: #fff;
-      font-family: 'JetBrains Mono', monospace;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
-      gap: 40px;
+      min-height: 44px; /* touch-friendly */
     }
 
-    .ascii {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 14px;
-      line-height: 1.2;
-      white-space: pre;
-      color: #fff;
-      border: 0px solid #fff;
-      padding: 20px 30px;
-      text-align: center;
+
+    .link:hover, .link:focus{
+      background: #111; /* subtle hover like original */
+      transform: translateY(-1px);
     }
 
-    .search-box {
-      border: 1px solid #fff;
-      padding: 8px 12px;
-      width: 400px;
-      background: #000;
-      color: #fff;
-      font-size: 16px;
-      outline: none;
-    }
 
-    .links {
-      display: grid;
-      grid-template-columns: repeat(4, 80px);
-      gap: 20px;
-    }
+    .link:focus{outline:2px solid rgba(255,255,255,0.08);outline-offset:2px}
 
-    .link {
-      border: 1px solid #fff;
-      padding: 12px;
-      text-align: center;
-      text-decoration: none;
-      color: #fff;
-      transition: background 0.2s;
-    }
-
-    .link:hover {
-      background: #111;
-    }
 
     .clock {
       font-size: 18px;
       letter-spacing: 2px;
+      min-width: 64px;
+      text-align: center;
     }
+
+
+    /* Respect user reduced motion preference */
+    @media (prefers-reduced-motion: reduce){
+      .link{transition:none}
+    }
+
+
   </style>
 </head>
 <body>
-  <pre class="ascii">
+  <pre class="ascii" aria-hidden="true">
   _____            ____                                  
  |__  /___ _ __   | __ ) _ __ _____      _____  ___ _ __ 
    / // _ \ '_ \  |  _ \| '__/ _ \ \ /\ / / __|/ _ \ '__|
@@ -75,28 +38,52 @@
  /____\___|_| |_| |____/|_|  \___/ \_/\_/ |___/\___|_|   
   </pre>
 
-  <form action="https://duckduckgo.com/" method="get">
-    <input type="text" name="q" class="search-box" placeholder="Search...">
+
+  <form class="search-form" action="https://duckduckgo.com/" method="get" role="search" aria-label="Search">
+    <input type="text" name="q" class="search-box" placeholder="Search..." aria-label="Search input">
   </form>
 
-  <div class="links">
+
+  <div class="links" role="navigation" aria-label="Quick links">
     <a href="https://github.com" class="link">GitHub</a>
-    <a href="https://chatgpt.com" class="link">ChatGPT </a>
+    <a href="https://chatgpt.com" class="link">ChatGPT</a>
     <a href="https://mail.proton.me/u/2/inbox" class="link">Mail</a>
     <a href="https://reddit.com" class="link">Reddit</a>
   </div>
 
-  <div class="clock" id="clock"></div>
+
+  <div class="clock" id="clock" aria-live="polite"></div>
+
 
   <script>
+    // Keep original clock format (HH:MM) but update each second to ensure minutes roll exactly on time
     function updateClock() {
       const now = new Date();
       const h = String(now.getHours()).padStart(2, '0');
       const m = String(now.getMinutes()).padStart(2, '0');
       document.getElementById('clock').textContent = `${h}:${m}`;
     }
-    setInterval(updateClock, 1000);
+
+
+    // Run immediately and then every second. This mirrors original behaviour while keeping time precise.
     updateClock();
+    setInterval(updateClock, 1000);
+
+
+    // small UX: pressing '/' focuses the search box (common on startpages)
+    (function(){
+      const input = document.querySelector('.search-box');
+      document.addEventListener('keydown', (e) => {
+        if (e.key === '/'){
+          // ignore when typing in an input or editable element
+          const active = document.activeElement;
+          if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) return;
+          e.preventDefault();
+          input.focus();
+          input.select();
+        }
+      });
+    })();
   </script>
 </body>
 </html>
