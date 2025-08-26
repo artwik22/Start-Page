@@ -71,4 +71,13 @@ font-size: 16px;
 outline: none;
 caret-color: var(--fg);
 }
-</html>
+.search-box::placeholder{color:var(--muted)}
+
+
+/* Links grid: mimic original 4-column layout on wide screens (keeps same visual)
+but provide responsive fallback on small viewports. This prevents the "different"
+look you saw on GitHub Pages when the page was rendered on different widths. */
+.links {
+display: grid;
+grid-template-columns: repeat(4, 1fr); /* fixed 4 columns to match local look */
+gap: 20px;
